@@ -1,0 +1,29 @@
+[project]
+name = "character-encoding-utils"
+version = "0.0.0"
+description = "Some character encoding utils."
+readme = "README.md"
+license = { text = "MIT License" }
+requires-python = ">=3.10"
+authors = [
+    { name = "TakWolf" },
+]
+maintainers = [
+    { name = "TakWolf" },
+]
+keywords = ["encoding"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+homepage = "https://github.com/TakWolf/character-encoding-utils"
+source = "https://github.com/TakWolf/character-encoding-utils"
+issues = "https://github.com/TakWolf/character-encoding-utils/issues"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src",
+]
