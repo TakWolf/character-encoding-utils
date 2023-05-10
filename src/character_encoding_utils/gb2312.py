@@ -29,7 +29,7 @@ def query_coord(c: str) -> tuple[int, int]:
     return row, col
 
 
-def chr_categories() -> list[str]:
+def get_categories() -> list[str]:
     return ['other', 'level-1', 'level-2']
 
 
@@ -81,17 +81,17 @@ def get_alphabet() -> list[str]:
     return list(_alphabet)
 
 
-def other_count() -> int:
+def get_other_count() -> int:
     return len(_alphabet_other)
 
 
-def level_1_count() -> int:
+def get_level_1_count() -> int:
     return len(_alphabet_level_1)
 
 
-def level_2_count() -> int:
+def get_level_2_count() -> int:
     return len(_alphabet_level_2)
 
 
-def count() -> int:
+def get_count() -> int:
     return len(_alphabet)

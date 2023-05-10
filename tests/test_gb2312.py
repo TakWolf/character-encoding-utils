@@ -38,7 +38,7 @@ def test_query_coord():
 
 
 def test_query_category():
-    categories = gb2312.chr_categories()
+    categories = gb2312.get_categories()
     assert len(categories) == 3
     assert 'other' in categories
     assert 'level-1' in categories
@@ -82,7 +82,7 @@ def test_alphabet():
 
 
 def test_count():
-    assert gb2312.other_count() == 682
-    assert gb2312.level_1_count() == 3755
-    assert gb2312.level_2_count() == 3008
-    assert gb2312.count() == 7445
+    assert gb2312.get_other_count() == 682
+    assert gb2312.get_level_1_count() == 3755
+    assert gb2312.get_level_2_count() == 3008
+    assert gb2312.get_count() == 7445
