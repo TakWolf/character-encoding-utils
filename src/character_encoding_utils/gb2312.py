@@ -53,7 +53,8 @@ def _get_alphabet_by_rows_between(row_start, row_end) -> list[str]:
     for row in range(row_start, row_end + 1):
         for col in range(1, 94 + 1):
             try:
-                alphabet.append(query_chr(row, col))
+                c = query_chr(row, col)
+                alphabet.append(c)
             except GB2312Exception:
                 pass
     return alphabet

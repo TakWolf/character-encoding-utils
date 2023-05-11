@@ -7,12 +7,13 @@ class KSX1001Exception(Exception):
 
 
 def query_chr(row: int, col: int):
-    if row < 1 or row > 94 or col < 1 or col > 94:
-        raise KSX1001Exception(f"'row' and 'col' must between 1 and 94")
     # 'euc_kr' 编码器对字符 'Hangul Filler (0x3164)' 的处理不正确，但是官方开发者竟然认为这不是一个错误
     # 问题详情见： https://github.com/python/cpython/issues/101863
     if row == 4 and col == 52:
         return chr(0x3164)
+
+    if row < 1 or row > 94 or col < 1 or col > 94:
+        raise KSX1001Exception(f"'row' and 'col' must between 1 and 94")
     try:
         return bytes([row + _euc_offset, col + _euc_offset]).decode('ksx1001')
     except UnicodeDecodeError as e:
@@ -58,7 +59,8 @@ def _get_alphabet_by_rows_between(row_start, row_end) -> list[str]:
     for row in range(row_start, row_end + 1):
         for col in range(1, 94 + 1):
             try:
-                alphabet.append(query_chr(row, col))
+                c = query_chr(row, col)
+                alphabet.append(c)
             except KSX1001Exception:
                 pass
     return alphabet
