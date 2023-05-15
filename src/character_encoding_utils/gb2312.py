@@ -6,27 +6,67 @@ class GB2312Exception(Exception):
     pass
 
 
-def query_chr(row: int, col: int) -> str:
-    if row < 1 or row > 94 or col < 1 or col > 94:
-        raise GB2312Exception(f"'row' and 'col' must between 1 and 94")
-    try:
-        return bytes([row + _euc_offset, col + _euc_offset]).decode('gb2312')
-    except UnicodeDecodeError as e:
-        raise GB2312Exception(f'gb2312 char at ({row}, {col}) undefined') from e
+class GB2312EncodeError(GB2312Exception):
+    def __init__(self, obj: str, position: int, reason: str):
+        self.object = obj
+        self.position = position
+        self.reason = reason
+        super().__init__(f"'gb2312' codec can't encode character '\\u{ord(obj):x}' in position {position}: {reason}")
+
+
+class GB2312DecodeError(GB2312Exception):
+    def __init__(self, obj: bytes, position: int, reason: str):
+        self.object = obj
+        self.position = position
+        self.reason = reason
+        super().__init__(f"'gb2312' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
+
+
+def encode(cs: str) -> bytes:
+    bs = bytearray()
+    for i, c in enumerate(cs):
+        try:
+            bs.extend(c.encode('gb2312'))
+        except UnicodeEncodeError as e:
+            raise GB2312EncodeError(c, i, e.reason) from e
+    return bytes(bs)
+
+
+def decode(bs: bytes) -> str:
+    cs = []
+    for i in range(0, len(bs), 2):
+        data = [bs[i]]
+        if i + 1 < len(bs):
+            data.append(bs[i + 1])
+        bc = bytes(data)
+        try:
+            cs.append(bc.decode('gb2312'))
+        except UnicodeDecodeError as e:
+            raise GB2312DecodeError(bc, i, e.reason) from e
+    return ''.join(cs)
 
 
 def query_coord(c: str) -> tuple[int, int]:
     if len(c) != 1:
-        raise GB2312Exception('Must be one char')
+        raise GB2312Exception('must be one character')
     try:
-        encoded = c.encode('gb2312')
-    except UnicodeEncodeError as e:
-        raise GB2312Exception(f"'{c}' not a gb2312 char") from e
-    if len(encoded) == 1:
-        raise GB2312Exception(f"'{c}' is a ascii char")
-    row = encoded[0] - _euc_offset
-    col = encoded[1] - _euc_offset
+        bs = encode(c)
+    except GB2312EncodeError as e:
+        raise GB2312Exception(f"'{c}' is not a 'gb2312' character") from e
+    if len(bs) == 1:
+        raise GB2312Exception(f"'{c}' is a ascii character")
+    row = bs[0] - _euc_offset
+    col = bs[1] - _euc_offset
     return row, col
+
+
+def query_chr(row: int, col: int) -> str:
+    if row < 1 or row > 94 or col < 1 or col > 94:
+        raise GB2312Exception(f"'row' and 'col' must between 1 and 94")
+    try:
+        return decode(bytes([row + _euc_offset, col + _euc_offset]))
+    except GB2312DecodeError as e:
+        raise GB2312Exception(f"'gb2312' coord at ({row}, {col}) is undefined'") from e
 
 
 def get_categories() -> list[str]:
@@ -45,10 +85,10 @@ def query_category(c: str) -> str | None:
     elif 56 <= row <= 87:
         return 'level-2'
     else:
-        raise AssertionError(f'Impossible row: {row}')
+        raise None
 
 
-def _get_alphabet_by_rows_between(row_start, row_end) -> list[str]:
+def _build_alphabet_by_rows_between(row_start: int, row_end: int) -> list[str]:
     alphabet = []
     for row in range(row_start, row_end + 1):
         for col in range(1, 94 + 1):
@@ -60,9 +100,9 @@ def _get_alphabet_by_rows_between(row_start, row_end) -> list[str]:
     return alphabet
 
 
-_alphabet_other = _get_alphabet_by_rows_between(1, 9)
-_alphabet_level_1 = _get_alphabet_by_rows_between(16, 55)
-_alphabet_level_2 = _get_alphabet_by_rows_between(56, 87)
+_alphabet_other = _build_alphabet_by_rows_between(1, 9)
+_alphabet_level_1 = _build_alphabet_by_rows_between(16, 55)
+_alphabet_level_2 = _build_alphabet_by_rows_between(56, 87)
 _alphabet = _alphabet_other + _alphabet_level_1 + _alphabet_level_2
 
 

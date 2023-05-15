@@ -1,23 +1,12 @@
 import pytest
 
 from character_encoding_utils import big5
-from character_encoding_utils.big5 import Big5Exception
+from character_encoding_utils.big5 import Big5Exception, Big5EncodeError, Big5DecodeError
 
 
-def test_query_chr():
-    assert big5.query_chr(0xA140) == '　'
-    assert big5.query_chr(0xA246) == '¢'
-    assert big5.query_chr(0xA440) == '一'
-    assert big5.query_chr(0xB050) == '訐'
-    assert big5.query_chr(0xC940) == '乂'
-    assert big5.query_chr(0xDF60) == '綃'
-
-    with pytest.raises(Big5Exception) as info:
-        big5.query_chr(0xA000)
-    assert isinstance(info.value.__cause__, UnicodeDecodeError)
-    with pytest.raises(Big5Exception) as info:
-        big5.query_chr(0xFFFF)
-    assert isinstance(info.value.__cause__, UnicodeDecodeError)
+def test_codec():
+    assert big5.encode('中國') == '中國'.encode('big5')
+    assert big5.decode(b'\xa4\xa4\xb0\xea') == b'\xa4\xa4\xb0\xea'.decode('big5')
 
 
 def test_query_code():
@@ -35,7 +24,23 @@ def test_query_code():
 
     with pytest.raises(Big5Exception) as info:
         big5.query_code('가')
-    assert isinstance(info.value.__cause__, UnicodeEncodeError)
+    assert isinstance(info.value.__cause__, Big5EncodeError)
+
+
+def test_query_chr():
+    assert big5.query_chr(0xA140) == '　'
+    assert big5.query_chr(0xA246) == '¢'
+    assert big5.query_chr(0xA440) == '一'
+    assert big5.query_chr(0xB050) == '訐'
+    assert big5.query_chr(0xC940) == '乂'
+    assert big5.query_chr(0xDF60) == '綃'
+
+    with pytest.raises(Big5Exception) as info:
+        big5.query_chr(0xA000)
+    assert isinstance(info.value.__cause__, Big5DecodeError)
+    with pytest.raises(Big5Exception) as info:
+        big5.query_chr(0xFFFF)
+    assert isinstance(info.value.__cause__, Big5DecodeError)
 
 
 def test_query_category():

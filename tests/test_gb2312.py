@@ -1,7 +1,28 @@
 import pytest
 
 from character_encoding_utils import gb2312
-from character_encoding_utils.gb2312 import GB2312Exception
+from character_encoding_utils.gb2312 import GB2312Exception, GB2312EncodeError, GB2312DecodeError
+
+
+def test_codec():
+    assert gb2312.encode('中国') == '中国'.encode('gb2312')
+    assert gb2312.decode(b'\xd6\xd0\xb9\xfa') == b'\xd6\xd0\xb9\xfa'.decode('gb2312')
+
+
+def test_query_coord():
+    assert gb2312.query_coord('＄') == (1, 71)
+    assert gb2312.query_coord('拿') == (36, 35)
+    assert gb2312.query_coord('贽') == (74, 62)
+    assert gb2312.query_coord('魍') == (87, 45)
+
+    with pytest.raises(GB2312Exception):
+        gb2312.query_coord('abc')
+    with pytest.raises(GB2312Exception):
+        gb2312.query_coord('d')
+
+    with pytest.raises(GB2312Exception) as info:
+        gb2312.query_coord('가')
+    assert isinstance(info.value.__cause__, GB2312EncodeError)
 
 
 def test_query_chr():
@@ -18,23 +39,7 @@ def test_query_chr():
 
     with pytest.raises(GB2312Exception) as info:
         gb2312.query_chr(94, 94)
-    assert isinstance(info.value.__cause__, UnicodeDecodeError)
-
-
-def test_query_coord():
-    assert gb2312.query_coord('＄') == (1, 71)
-    assert gb2312.query_coord('拿') == (36, 35)
-    assert gb2312.query_coord('贽') == (74, 62)
-    assert gb2312.query_coord('魍') == (87, 45)
-
-    with pytest.raises(GB2312Exception):
-        gb2312.query_coord('abc')
-    with pytest.raises(GB2312Exception):
-        gb2312.query_coord('d')
-
-    with pytest.raises(GB2312Exception) as info:
-        gb2312.query_coord('가')
-    assert isinstance(info.value.__cause__, UnicodeEncodeError)
+    assert isinstance(info.value.__cause__, GB2312DecodeError)
 
 
 def test_query_category():
