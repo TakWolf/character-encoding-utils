@@ -20,6 +20,8 @@ def test_codec():
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 
+    assert ksx1001.decode(ksx1001.encode(chr(0x3164))) == chr(0x3164)
+
 
 def test_query_coord():
     assert ksx1001.query_coord('ㆌ') == (4, 92)
