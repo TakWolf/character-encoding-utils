@@ -42,7 +42,7 @@ assert big5.decode(bs) == 'abc中國'
 ```python
 from character_encoding_utils import shiftjis
 
-bs =  shiftjis.encode('abc日本')
+bs = shiftjis.encode('abc日本')
 assert shiftjis.decode(bs) == 'abc日本'
 ```
 
