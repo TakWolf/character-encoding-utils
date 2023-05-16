@@ -5,8 +5,20 @@ from character_encoding_utils.big5 import Big5Exception, Big5EncodeError, Big5De
 
 
 def test_codec():
-    assert big5.encode('中國') == '中國'.encode('big5')
-    assert big5.decode(b'\xa4\xa4\xb0\xea') == b'\xa4\xa4\xb0\xea'.decode('big5')
+    assert big5.encode('abc中國') == 'abc中國'.encode('big5')
+    assert big5.decode(b'abc\xa4\xa4\xb0\xea') == b'abc\xa4\xa4\xb0\xea'.decode('big5')
+
+    with pytest.raises(Big5EncodeError) as info:
+        big5.encode('abc가')
+    assert info.value.object == '가'
+    assert info.value.position == 3
+    assert info.value.reason == 'illegal multibyte sequence'
+
+    with pytest.raises(Big5DecodeError) as info:
+        big5.decode(b'abc\xa4\xa4\xb0')
+    assert info.value.object == b'\xb0'
+    assert info.value.position == 5
+    assert info.value.reason == 'incomplete multibyte sequence'
 
 
 def test_query_code():

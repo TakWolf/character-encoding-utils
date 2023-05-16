@@ -24,30 +24,44 @@ class KSX1001DecodeError(KSX1001Exception):
 
 def encode(cs: str) -> bytes:
     bs = bytearray()
-    for i, c in enumerate(cs):
+    for position, c in enumerate(cs):
         try:
             bs.extend(c.encode('ksx1001'))
         except UnicodeEncodeError as e:
-            raise KSX1001EncodeError(c, i, e.reason) from e
+            raise KSX1001EncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
 def decode(bs: bytes) -> str:
     cs = []
-    for i in range(0, len(bs), 2):
-        data = [bs[i]]
-        if i + 1 < len(bs):
-            data.append(bs[i + 1])
-        bc = bytes(data)
+    bs = iter(bs)
+    position = -1
+    while True:
+        try:
+            b1 = next(bs)
+            position += 1
+        except StopIteration:
+            break
+        b2 = None
+        if b1 > 0x7F:
+            try:
+                b2 = next(bs)
+                position += 1
+            except StopIteration:
+                pass
+        if b2 is None:
+            bc = bytes([b1])
+        else:
+            bc = bytes([b1, b2])
         # 'euc_kr' 编码器对字符 'Hangul Filler (0x3164, row = 4, col= 52)' 的处理不正确，但是官方开发者并不认为这是一个错误
         # 问题详情见： https://github.com/python/cpython/issues/101863
         if bc == b'\xa4\xd4':
             cs.append(chr(0x3164))
-        else:
-            try:
-                cs.append(bc.decode('ksx1001'))
-            except UnicodeDecodeError as e:
-                raise KSX1001DecodeError(bc, i, e.reason) from e
+            continue
+        try:
+            cs.append(bc.decode('ksx1001'))
+        except UnicodeDecodeError as e:
+            raise KSX1001DecodeError(bc, position, e.reason) from e
     return ''.join(cs)
 
 

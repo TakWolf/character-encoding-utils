@@ -5,8 +5,20 @@ from character_encoding_utils.ksx1001 import KSX1001Exception, KSX1001EncodeErro
 
 
 def test_codec():
-    assert ksx1001.encode('가쳰') == '가쳰'.encode('ksx1001')
-    assert ksx1001.decode(b'\xb0\xa1\xc3\xc8') == b'\xb0\xa1\xc3\xc8'.decode('ksx1001')
+    assert ksx1001.encode('abc가쳰') == 'abc가쳰'.encode('ksx1001')
+    assert ksx1001.decode(b'abc\xb0\xa1\xc3\xc8') == b'abc\xb0\xa1\xc3\xc8'.decode('ksx1001')
+
+    with pytest.raises(KSX1001EncodeError) as info:
+        ksx1001.encode('abc😈')
+    assert info.value.object == '😈'
+    assert info.value.position == 3
+    assert info.value.reason == 'illegal multibyte sequence'
+
+    with pytest.raises(KSX1001DecodeError) as info:
+        ksx1001.decode(b'abc\xb0\xa1\xc3')
+    assert info.value.object == b'\xc3'
+    assert info.value.position == 5
+    assert info.value.reason == 'incomplete multibyte sequence'
 
 
 def test_query_coord():

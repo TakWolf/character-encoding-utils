@@ -21,37 +21,53 @@ class Big5DecodeError(Big5Exception):
 
 def encode(cs: str) -> bytes:
     bs = bytearray()
-    for i, c in enumerate(cs):
+    for position, c in enumerate(cs):
         # 此处默认编码器映射错误
         if c == '〸':
             bs.extend(b'\xa2\xcc')
+            continue
         elif c == '〺':
             bs.extend(b'\xa2\xce')
-        else:
-            try:
-                bs.extend(c.encode('big5'))
-            except UnicodeEncodeError as e:
-                raise Big5EncodeError(c, i, e.reason) from e
+            continue
+        try:
+            bs.extend(c.encode('big5'))
+        except UnicodeEncodeError as e:
+            raise Big5EncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
 def decode(bs: bytes) -> str:
     cs = []
-    for i in range(0, len(bs), 2):
-        data = [bs[i]]
-        if i + 1 < len(bs):
-            data.append(bs[i + 1])
-        bc = bytes(data)
+    bs = iter(bs)
+    position = -1
+    while True:
+        try:
+            b1 = next(bs)
+            position += 1
+        except StopIteration:
+            break
+        b2 = None
+        if b1 > 0x7F:
+            try:
+                b2 = next(bs)
+                position += 1
+            except StopIteration:
+                pass
+        if b2 is None:
+            bc = bytes([b1])
+        else:
+            bc = bytes([b1, b2])
         # 此处默认编码器映射错误
         if bc == b'\xa2\xcc':
             cs.append('〸')
-        elif bs == b'\xa2\xce':
+            continue
+        elif bc == b'\xa2\xce':
             cs.append('〺')
-        else:
-            try:
-                cs.append(bc.decode('big5'))
-            except UnicodeDecodeError as e:
-                raise Big5DecodeError(bc, i, e.reason) from e
+            continue
+        try:
+            cs.append(bc.decode('big5'))
+        except UnicodeDecodeError as e:
+            raise Big5DecodeError(bc, position, e.reason) from e
     return ''.join(cs)
 
 

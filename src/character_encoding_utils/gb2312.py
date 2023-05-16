@@ -24,25 +24,39 @@ class GB2312DecodeError(GB2312Exception):
 
 def encode(cs: str) -> bytes:
     bs = bytearray()
-    for i, c in enumerate(cs):
+    for position, c in enumerate(cs):
         try:
             bs.extend(c.encode('gb2312'))
         except UnicodeEncodeError as e:
-            raise GB2312EncodeError(c, i, e.reason) from e
+            raise GB2312EncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
 def decode(bs: bytes) -> str:
     cs = []
-    for i in range(0, len(bs), 2):
-        data = [bs[i]]
-        if i + 1 < len(bs):
-            data.append(bs[i + 1])
-        bc = bytes(data)
+    bs = iter(bs)
+    position = -1
+    while True:
+        try:
+            b1 = next(bs)
+            position += 1
+        except StopIteration:
+            break
+        b2 = None
+        if b1 > 0x7F:
+            try:
+                b2 = next(bs)
+                position += 1
+            except StopIteration:
+                pass
+        if b2 is None:
+            bc = bytes([b1])
+        else:
+            bc = bytes([b1, b2])
         try:
             cs.append(bc.decode('gb2312'))
         except UnicodeDecodeError as e:
-            raise GB2312DecodeError(bc, i, e.reason) from e
+            raise GB2312DecodeError(bc, position, e.reason) from e
     return ''.join(cs)
 
 

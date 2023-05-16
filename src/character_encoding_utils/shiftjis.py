@@ -23,30 +23,50 @@ class ShiftJISDecodeError(ShiftJISException):
 
 def encode(cs: str) -> bytes:
     bs = bytearray()
-    for i, c in enumerate(cs):
+    for position, c in enumerate(cs):
         try:
             bs.extend(c.encode('shift-jis'))
         except UnicodeEncodeError as e:
-            raise ShiftJISEncodeError(c, i, e.reason) from e
+            raise ShiftJISEncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
 def decode(bs: bytes) -> str:
     cs = []
-    for i in range(0, len(bs), 2):
-        data = [bs[i]]
-        if i + 1 < len(bs):
-            data.append(bs[i + 1])
-        bc = bytes(data)
+    bs = iter(bs)
+    position = -1
+    while True:
+        try:
+            b1 = next(bs)
+            position += 1
+        except StopIteration:
+            break
+        b2 = None
+        if not (b1 <= 0x7F or 0xA1 <= b1 <= 0xDF):
+            try:
+                b2 = next(bs)
+                position += 1
+            except StopIteration:
+                pass
+        if b2 is None:
+            bc = bytes([b1])
+        else:
+            bc = bytes([b1, b2])
         try:
             cs.append(bc.decode('shift-jis'))
         except UnicodeDecodeError as e:
-            raise ShiftJISDecodeError(bc, i, e.reason) from e
+            raise ShiftJISDecodeError(bc, position, e.reason) from e
     return ''.join(cs)
 
 
 def get_categories() -> list[str]:
-    return ['single-ascii', 'single-other', 'double-other', 'double-kanji']
+    return [
+        'single-byte-ascii-control',
+        'single-byte-ascii-printable',
+        'single-byte-half-width-katakana',
+        'double-byte-other',
+        'double-byte-kanji',
+    ]
 
 
 def query_category(c: str) -> str | None:
@@ -56,18 +76,20 @@ def query_category(c: str) -> str | None:
         return None
     first_byte = bs[0]
     if len(bs) == 1:
-        if 0x20 <= first_byte <= 0x7E:
-            return 'single-ascii'
+        if 0x00 <= first_byte <= 0x1F or first_byte == 0x7F:
+            return 'single-byte-ascii-control'
+        elif 0x20 <= first_byte <= 0x7E:
+            return 'single-byte-ascii-printable'
         elif 0xA1 <= first_byte <= 0xDF:
-            return 'single-other'
+            return 'single-byte-half-width-katakana'
         else:
             raise None
     else:
         second_byte = bs[1]
         if 0x81 <= first_byte <= 0x87 or (first_byte == 0x88 and second_byte <= 0x9E):
-            return 'double-other'
+            return 'double-byte-other'
         elif (first_byte == 0x88 and second_byte >= 0x9F) or 0x89 <= first_byte <= 0x9F or 0xE0 <= first_byte <= 0xEF:
-            return 'double-kanji'
+            return 'double-byte-kanji'
         else:
             raise None
 
@@ -83,7 +105,7 @@ def _build_alphabet_single_byte(byte_start: int, byte_end: int) -> list[str]:
     return alphabet
 
 
-def _build_alphabet_double_other() -> list[str]:
+def _build_alphabet_double_byte_other() -> list[str]:
     """
     第一位字节使用 0x81 ~ 0x87，第二位字节使用 0x40 ~ 0x7E、0x80 ~ 0xFC
     第一位字节使用 0x88，第二位字节使用 0x40 ~ 0x7E、0x80 ~ 0x9E
@@ -105,7 +127,7 @@ def _build_alphabet_double_other() -> list[str]:
     return alphabet
 
 
-def _build_alphabet_double_kanji() -> list[str]:
+def _build_alphabet_double_byte_kanji() -> list[str]:
     """
     第一位字节使用 0x88，第二位字节使用 0x9F ~ 0xFC
     第一位字节使用 0x89 ~ 0x9F、0xE0 ~ 0xEF，第二位字节使用 0x40 ~ 0x7E、0x80 ~ 0xFC
@@ -128,47 +150,57 @@ def _build_alphabet_double_kanji() -> list[str]:
     return alphabet
 
 
-_alphabet_single_ascii = _build_alphabet_single_byte(0x20, 0x7E)
-_alphabet_single_other = _build_alphabet_single_byte(0xA1, 0xDF)
-_alphabet_double_other = _build_alphabet_double_other()
-_alphabet_double_kanji = _build_alphabet_double_kanji()
-_alphabet = _alphabet_single_ascii + _alphabet_single_other + _alphabet_double_other + _alphabet_double_kanji
+_alphabet_single_byte_ascii_control = _build_alphabet_single_byte(0x00, 0x1F)
+_alphabet_single_byte_ascii_control.append(chr(0x7F))
+_alphabet_single_byte_ascii_printable = _build_alphabet_single_byte(0x20, 0x7E)
+_alphabet_single_byte_half_width_katakana = _build_alphabet_single_byte(0xA1, 0xDF)
+_alphabet_double_byte_other = _build_alphabet_double_byte_other()
+_alphabet_double_byte_kanji = _build_alphabet_double_byte_kanji()
+_alphabet = _alphabet_single_byte_ascii_control + _alphabet_single_byte_ascii_printable + _alphabet_single_byte_half_width_katakana + _alphabet_double_byte_other + _alphabet_double_byte_kanji
 
 
-def get_alphabet_single_ascii() -> list[str]:
-    return list(_alphabet_single_ascii)
+def get_alphabet_single_byte_ascii_control() -> list[str]:
+    return list(_alphabet_single_byte_ascii_control)
 
 
-def get_alphabet_single_other() -> list[str]:
-    return list(_alphabet_single_other)
+def get_alphabet_single_byte_ascii_printable() -> list[str]:
+    return list(_alphabet_single_byte_ascii_printable)
 
 
-def get_alphabet_double_other() -> list[str]:
-    return list(_alphabet_double_other)
+def get_alphabet_single_byte_half_width_katakana() -> list[str]:
+    return list(_alphabet_single_byte_half_width_katakana)
 
 
-def get_alphabet_double_kanji() -> list[str]:
-    return list(_alphabet_double_kanji)
+def get_alphabet_double_byte_other() -> list[str]:
+    return list(_alphabet_double_byte_other)
+
+
+def get_alphabet_double_byte_kanji() -> list[str]:
+    return list(_alphabet_double_byte_kanji)
 
 
 def get_alphabet() -> list[str]:
     return list(_alphabet)
 
 
-def get_single_ascii_count() -> int:
-    return len(_alphabet_single_ascii)
+def get_single_byte_ascii_control_count() -> int:
+    return len(_alphabet_single_byte_ascii_control)
 
 
-def get_single_other_count() -> int:
-    return len(_alphabet_single_other)
+def get_single_byte_ascii_printable_count() -> int:
+    return len(_alphabet_single_byte_ascii_printable)
 
 
-def get_double_other_count() -> int:
-    return len(_alphabet_double_other)
+def get_single_byte_half_width_katakana_count() -> int:
+    return len(_alphabet_single_byte_half_width_katakana)
 
 
-def get_double_kanji_count() -> int:
-    return len(_alphabet_double_kanji)
+def get_double_byte_other_count() -> int:
+    return len(_alphabet_double_byte_other)
+
+
+def get_double_byte_kanji_count() -> int:
+    return len(_alphabet_double_byte_kanji)
 
 
 def get_count() -> int:
