@@ -20,6 +20,31 @@ def test_codec():
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 
+    c = '〸'
+    assert ord(c) == 0x3038
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '〹'
+    assert ord(c) == 0x3039
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '〺'
+    assert ord(c) == 0x303A
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '十'
+    assert ord(c) == 0x5341
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '卄'
+    assert ord(c) == 0x5344
+    with pytest.raises(Big5EncodeError):
+        big5.encode(c)
+
+    c = '卅'
+    assert ord(c) == 0x5345
+    assert big5.decode(big5.encode(c)) == c
+
 
 def test_query_code():
     assert big5.query_code('　') == 0xA140

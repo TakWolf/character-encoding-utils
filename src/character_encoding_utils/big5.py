@@ -23,11 +23,23 @@ def encode(cs: str) -> bytes:
     bs = bytearray()
     for position, c in enumerate(cs):
         # 此处默认编码器映射错误
-        if c == '〸':
+        if c == '〸':  # 0x3038
             bs.extend(b'\xa2\xcc')
             continue
-        elif c == '〺':
+        elif c == '〹':  # 0x3039
+            bs.extend(b'\xa2\xcd')
+            continue
+        elif c == '〺':  # 0x303A
             bs.extend(b'\xa2\xce')
+            continue
+        elif c == '十':  # 0x5341
+            bs.extend(b'\xa4\x51')
+            continue
+        elif c == '卄':  # 0x5344
+            # Big5 不包含汉字的 '卄'
+            raise Big5EncodeError(c, position, 'illegal multibyte sequence')
+        elif c == '卅':  # 0x5345
+            bs.extend(b'\xa4\xca')
             continue
 
         try:
@@ -61,10 +73,19 @@ def decode(bs: bytes) -> str:
 
         # 此处默认编码器映射错误
         if bc == b'\xa2\xcc':
-            cs.append('〸')
+            cs.append('〸')  # 0x3038
+            continue
+        elif bc == b'\xa2\xcd':
+            cs.append('〹')  # 0x3039
             continue
         elif bc == b'\xa2\xce':
-            cs.append('〺')
+            cs.append('〺')  # 0x303A
+            continue
+        elif bc == b'\xa4\x51':
+            cs.append('十')  # 0x5341
+            continue
+        elif bc == b'\xa4\xca':
+            cs.append('卅')  # 0x5345
             continue
 
         try:
