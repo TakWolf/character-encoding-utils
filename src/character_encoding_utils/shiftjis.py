@@ -24,6 +24,11 @@ class ShiftJISDecodeError(ShiftJISException):
 def encode(cs: str) -> bytes:
     bs = bytearray()
     for position, c in enumerate(cs):
+        if c == '\\':
+            raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '\\' is replaced with '¥'")
+        elif c == '~':
+            raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '~' is replaced with '‾'")
+
         try:
             bs.extend(c.encode('shift-jis'))
         except UnicodeEncodeError as e:
@@ -52,6 +57,14 @@ def decode(bs: bytes) -> str:
             bc = bytes([b1])
         else:
             bc = bytes([b1, b2])
+
+        if bc == b'\\':
+            cs.append('¥')
+            continue
+        elif bc == b'~':
+            cs.append('‾')
+            continue
+
         try:
             cs.append(bc.decode('shift-jis'))
         except UnicodeDecodeError as e:

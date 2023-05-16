@@ -20,6 +20,23 @@ def test_codec():
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 
+    with pytest.raises(ShiftJISEncodeError) as info:
+        shiftjis.encode('\\')
+    assert info.value.object == '\\'
+    assert info.value.position == 0
+    assert '\\' in info.value.reason
+    assert '¥' in info.value.reason
+
+    with pytest.raises(ShiftJISEncodeError) as info:
+        shiftjis.encode('~')
+    assert info.value.object == '~'
+    assert info.value.position == 0
+    assert '~' in info.value.reason
+    assert '‾' in info.value.reason
+
+    assert shiftjis.decode(shiftjis.encode('¥')) == '¥'
+    assert shiftjis.decode(shiftjis.encode('‾')) == '‾'
+
 
 def test_query_category():
     categories = shiftjis.get_categories()
