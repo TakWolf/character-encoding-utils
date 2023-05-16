@@ -53,11 +53,13 @@ def decode(bs: bytes) -> str:
             bc = bytes([b1])
         else:
             bc = bytes([b1, b2])
+
         # 'euc_kr' 编码器对字符 'Hangul Filler (0x3164, row = 4, col= 52)' 的处理不正确，但是官方开发者并不认为这是一个错误
         # 问题详情见： https://github.com/python/cpython/issues/101863
         if bc == b'\xa4\xd4':
             cs.append(chr(0x3164))
             continue
+
         try:
             cs.append(bc.decode('ksx1001'))
         except UnicodeDecodeError as e:

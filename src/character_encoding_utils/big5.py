@@ -29,6 +29,7 @@ def encode(cs: str) -> bytes:
         elif c == '〺':
             bs.extend(b'\xa2\xce')
             continue
+
         try:
             bs.extend(c.encode('big5'))
         except UnicodeEncodeError as e:
@@ -57,6 +58,7 @@ def decode(bs: bytes) -> str:
             bc = bytes([b1])
         else:
             bc = bytes([b1, b2])
+
         # 此处默认编码器映射错误
         if bc == b'\xa2\xcc':
             cs.append('〸')
@@ -64,6 +66,7 @@ def decode(bs: bytes) -> str:
         elif bc == b'\xa2\xce':
             cs.append('〺')
             continue
+
         try:
             cs.append(bc.decode('big5'))
         except UnicodeDecodeError as e:
