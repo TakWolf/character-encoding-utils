@@ -94,3 +94,37 @@ def test_count():
     assert shiftjis.get_double_byte_other_count() == 524
     assert shiftjis.get_double_byte_kanji_count() == 6355
     assert shiftjis.get_count() == 7070
+
+
+def test_unicode():
+    alphabet_single_byte_ascii_control = []
+    alphabet_single_byte_ascii_printable = []
+    alphabet_single_byte_half_width_katakana = []
+    alphabet_double_byte_other = []
+    alphabet_double_byte_kanji = []
+    alphabet = []
+
+    for code_point in range(0, 0x10FFFF + 1):
+        c = chr(code_point)
+        category = shiftjis.query_category(c)
+
+        if category == 'single-byte-ascii-control':
+            alphabet_single_byte_ascii_control.append(c)
+        elif category == 'single-byte-ascii-printable':
+            alphabet_single_byte_ascii_printable.append(c)
+        elif category == 'single-byte-half-width-katakana':
+            alphabet_single_byte_half_width_katakana.append(c)
+        elif category == 'double-byte-other':
+            alphabet_double_byte_other.append(c)
+        elif category == 'double-byte-kanji':
+            alphabet_double_byte_kanji.append(c)
+
+        if category is not None:
+            alphabet.append(c)
+
+    assert len(alphabet_single_byte_ascii_control) == shiftjis.get_single_byte_ascii_control_count()
+    assert len(alphabet_single_byte_ascii_printable) == shiftjis.get_single_byte_ascii_printable_count()
+    assert len(alphabet_single_byte_half_width_katakana) == shiftjis.get_single_byte_half_width_katakana_count()
+    assert len(alphabet_double_byte_other) == shiftjis.get_double_byte_other_count()
+    assert len(alphabet_double_byte_kanji) == shiftjis.get_double_byte_kanji_count()
+    assert len(alphabet) == shiftjis.get_count()

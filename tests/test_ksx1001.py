@@ -107,3 +107,29 @@ def test_count():
     assert ksx1001.get_syllable_count() == 2350
     assert ksx1001.get_hanja_count() == 4888
     assert ksx1001.get_count() == 8226
+
+
+def test_unicode():
+    alphabet_other = []
+    alphabet_syllable = []
+    alphabet_hanja = []
+    alphabet = []
+
+    for code_point in range(0, 0x10FFFF + 1):
+        c = chr(code_point)
+        category = ksx1001.query_category(c)
+
+        if category == 'other':
+            alphabet_other.append(c)
+        elif category == 'syllable':
+            alphabet_syllable.append(c)
+        elif category == 'hanja':
+            alphabet_hanja.append(c)
+
+        if category is not None:
+            alphabet.append(c)
+
+    assert len(alphabet_other) == ksx1001.get_other_count()
+    assert len(alphabet_syllable) == ksx1001.get_syllable_count()
+    assert len(alphabet_hanja) == ksx1001.get_hanja_count()
+    assert len(alphabet) == ksx1001.get_count()

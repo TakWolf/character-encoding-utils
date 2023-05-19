@@ -129,3 +129,29 @@ def test_count():
     assert big5.get_level_1_count() == 5401
     assert big5.get_level_2_count() == 7652
     assert big5.get_count() == 13461
+
+
+def test_unicode():
+    alphabet_other = []
+    alphabet_level_1 = []
+    alphabet_level_2 = []
+    alphabet = []
+
+    for code_point in range(0, 0x10FFFF + 1):
+        c = chr(code_point)
+        category = big5.query_category(c)
+
+        if category == 'other':
+            alphabet_other.append(c)
+        elif category == 'level-1':
+            alphabet_level_1.append(c)
+        elif category == 'level-2':
+            alphabet_level_2.append(c)
+
+        if category is not None:
+            alphabet.append(c)
+
+    assert len(alphabet_other) == big5.get_other_count()
+    assert len(alphabet_level_1) == big5.get_level_1_count()
+    assert len(alphabet_level_2) == big5.get_level_2_count()
+    assert len(alphabet) == big5.get_count()

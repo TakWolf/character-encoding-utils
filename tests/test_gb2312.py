@@ -103,3 +103,29 @@ def test_count():
     assert gb2312.get_level_1_count() == 3755
     assert gb2312.get_level_2_count() == 3008
     assert gb2312.get_count() == 7445
+
+
+def test_unicode():
+    alphabet_other = []
+    alphabet_level_1 = []
+    alphabet_level_2 = []
+    alphabet = []
+
+    for code_point in range(0, 0x10FFFF + 1):
+        c = chr(code_point)
+        category = gb2312.query_category(c)
+
+        if category == 'other':
+            alphabet_other.append(c)
+        elif category == 'level-1':
+            alphabet_level_1.append(c)
+        elif category == 'level-2':
+            alphabet_level_2.append(c)
+
+        if category is not None:
+            alphabet.append(c)
+
+    assert len(alphabet_other) == gb2312.get_other_count()
+    assert len(alphabet_level_1) == gb2312.get_level_1_count()
+    assert len(alphabet_level_2) == gb2312.get_level_2_count()
+    assert len(alphabet) == gb2312.get_count()
