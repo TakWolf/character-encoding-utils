@@ -41,6 +41,18 @@ def encode(cs: str) -> bytes:
         elif c == '卅':  # 0x5345
             bs.extend(b'\xa4\xca')
             continue
+        elif c == '／':  # 0xFF0F
+            bs.extend(b'\xa1\xfe')
+            continue
+        elif c == '＼':  # 0xFF3C
+            bs.extend(b'\xa2\x40')
+            continue
+        elif c == '∕':  # 0x2215
+            bs.extend(b'\xa2\x41')
+            continue
+        elif c == '﹨':  # 0xFE68
+            bs.extend(b'\xa2\x42')
+            continue
 
         try:
             bs.extend(c.encode('big5'))
@@ -86,6 +98,18 @@ def decode(bs: bytes) -> str:
             continue
         elif bc == b'\xa4\xca':
             cs.append('卅')  # 0x5345
+            continue
+        elif bc == b'\xa1\xfe':
+            cs.append('／')  # 0xFF0F
+            continue
+        elif bc == b'\xa2\x40':
+            cs.append('＼')  # 0xFF3C
+            continue
+        elif bc == b'\xa2\x41':
+            cs.append('∕')  # 0x2215
+            continue
+        elif bc == b'\xa2\x42':
+            cs.append('﹨')  # 0xFE68
             continue
 
         try:

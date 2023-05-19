@@ -45,6 +45,22 @@ def test_codec():
     assert ord(c) == 0x5345
     assert big5.decode(big5.encode(c)) == c
 
+    c = '／'
+    assert ord(c) == 0xFF0F
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '＼'
+    assert ord(c) == 0xFF3C
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '∕'
+    assert ord(c) == 0x2215
+    assert big5.decode(big5.encode(c)) == c
+
+    c = '﹨'
+    assert ord(c) == 0xFE68
+    assert big5.decode(big5.encode(c)) == c
+
 
 def test_query_code():
     assert big5.query_code('　') == 0xA140
