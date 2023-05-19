@@ -47,6 +47,17 @@ def decode(bs: bytes | bytearray) -> str:
                 bc.append(bs[cursor])
                 cursor += 1
 
+        if bc == b'\xa4\xd4' and cursor + 5 < len(bs):
+            if bs[cursor] == 0xA4 and bs[cursor + 2] == 0xA4 and bs[cursor + 4] == 0xA4:
+                if 0xA1 <= bs[cursor + 1] <= 0xD4 and 0xA1 <= bs[cursor + 3] <= 0xD4 and 0xA1 <= bs[cursor + 5] <= 0xD4:
+                    bc.append(bs[cursor])
+                    bc.append(bs[cursor + 1])
+                    bc.append(bs[cursor + 2])
+                    bc.append(bs[cursor + 3])
+                    bc.append(bs[cursor + 4])
+                    bc.append(bs[cursor + 5])
+                    cursor += 6
+
         if bc == b'\xa4\xd4':
             cs.append(chr(0x3164))  # Hangul Filler
         else:
