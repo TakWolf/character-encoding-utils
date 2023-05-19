@@ -19,7 +19,10 @@ class GB2312DecodeError(GB2312Exception):
         self.object = obj
         self.position = position
         self.reason = reason
-        super().__init__(f"'gb2312' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
+        if len(obj) <= 1:
+            super().__init__(f"'gb2312' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
+        else:
+            super().__init__(f"'gb2312' codec can't decode bytes in position {position}-{position + len(obj) - 1}: {reason}")
 
 
 def encode(cs: str) -> bytes:
