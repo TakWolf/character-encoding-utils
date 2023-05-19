@@ -78,6 +78,8 @@ def query_coord(c: str) -> tuple[int, int]:
         raise KSX1001Exception(f"'{c}' is not a 'ksx1001' character") from e
     if len(bs) == 1:
         raise KSX1001Exception(f"'{c}' is a ascii character")
+    elif bs.startswith(b'\xa4\xd4') and len(bs) > 2:
+        raise KSX1001Exception(f"'{c}' is not a 'ksx1001' character")
     row = bs[0] - _euc_offset
     col = bs[1] - _euc_offset
     return row, col
