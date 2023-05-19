@@ -32,31 +32,26 @@ def encode(cs: str) -> bytes:
     return bytes(bs)
 
 
-def decode(bs: bytes) -> str:
+def decode(bs: bytes | bytearray) -> str:
     cs = []
-    bs = iter(bs)
-    position = -1
+    cursor = 0
+    passed = 0
     while True:
-        try:
-            b1 = next(bs)
-            position += 1
-        except StopIteration:
+        if cursor >= len(bs):
             break
-        b2 = None
-        if b1 > 0x7F:
-            try:
-                b2 = next(bs)
-                position += 1
-            except StopIteration:
-                pass
-        if b2 is None:
-            bc = bytes([b1])
-        else:
-            bc = bytes([b1, b2])
+        bc = bytearray([bs[cursor]])
+        cursor += 1
+
+        if bc[0] > 0x7F:
+            if cursor < len(bs):
+                bc.append(bs[cursor])
+                cursor += 1
+
         try:
             cs.append(bc.decode('gb2312'))
         except UnicodeDecodeError as e:
-            raise GB2312DecodeError(bc, position, e.reason) from e
+            raise GB2312DecodeError(bc, passed, e.reason) from e
+        passed += len(bc)
     return ''.join(cs)
 
 

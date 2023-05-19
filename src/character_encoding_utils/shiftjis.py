@@ -28,47 +28,39 @@ def encode(cs: str) -> bytes:
             raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '\\' is replaced with '¥'")
         elif c == '~':
             raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '~' is replaced with '‾'")
-
-        try:
-            bs.extend(c.encode('shift-jis'))
-        except UnicodeEncodeError as e:
-            raise ShiftJISEncodeError(c, position, e.reason) from e
+        else:
+            try:
+                bs.extend(c.encode('shift-jis'))
+            except UnicodeEncodeError as e:
+                raise ShiftJISEncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
-def decode(bs: bytes) -> str:
+def decode(bs: bytes | bytearray) -> str:
     cs = []
-    bs = iter(bs)
-    position = -1
+    cursor = 0
+    passed = 0
     while True:
-        try:
-            b1 = next(bs)
-            position += 1
-        except StopIteration:
+        if cursor >= len(bs):
             break
-        b2 = None
-        if not (b1 <= 0x7F or 0xA1 <= b1 <= 0xDF):
-            try:
-                b2 = next(bs)
-                position += 1
-            except StopIteration:
-                pass
-        if b2 is None:
-            bc = bytes([b1])
-        else:
-            bc = bytes([b1, b2])
+        bc = bytearray([bs[cursor]])
+        cursor += 1
+
+        if not (bc[0] <= 0x7F or 0xA1 <= bc[0] <= 0xDF):
+            if cursor < len(bs):
+                bc.append(bs[cursor])
+                cursor += 1
 
         if bc == b'\\':
             cs.append('¥')
-            continue
         elif bc == b'~':
             cs.append('‾')
-            continue
-
-        try:
-            cs.append(bc.decode('shift-jis'))
-        except UnicodeDecodeError as e:
-            raise ShiftJISDecodeError(bc, position, e.reason) from e
+        else:
+            try:
+                cs.append(bc.decode('shift-jis'))
+            except UnicodeDecodeError as e:
+                raise ShiftJISDecodeError(bc, passed, e.reason) from e
+        passed += len(bc)
     return ''.join(cs)
 
 
