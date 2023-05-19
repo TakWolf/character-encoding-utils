@@ -11,7 +11,7 @@ authors = [
 maintainers = [
     { name = "TakWolf" },
 ]
-keywords = ["encoding"]
+keywords = ["encoding", "gb2312", "big5", "shift-jis", "ksx1001"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
