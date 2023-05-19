@@ -22,6 +22,10 @@ def test_codec():
 
     assert ksx1001.decode(ksx1001.encode(chr(0x3164))) == chr(0x3164)
 
+    for code_point in range(0xAC00, 0xD7A4):
+        c = chr(code_point)
+        assert ksx1001.decode(ksx1001.encode(c)) == c
+
 
 def test_query_coord():
     assert ksx1001.query_coord('ㆌ') == (4, 92)
