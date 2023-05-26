@@ -113,7 +113,7 @@ def query_category(c: str) -> str | None:
     elif 42 <= row <= 93:
         return 'hanja'
     else:
-        raise None
+        return None
 
 
 def _build_alphabet_by_rows_between(row_start: int, row_end: int) -> list[str]:

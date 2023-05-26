@@ -91,7 +91,7 @@ def query_category(c: str) -> str | None:
         elif 0xA1 <= first_byte <= 0xDF:
             return 'single-byte-half-width-katakana'
         else:
-            raise None
+            return None
     else:
         second_byte = bs[1]
         if 0x81 <= first_byte <= 0x87 or (first_byte == 0x88 and second_byte <= 0x9E):
@@ -99,7 +99,7 @@ def query_category(c: str) -> str | None:
         elif (first_byte == 0x88 and second_byte >= 0x9F) or 0x89 <= first_byte <= 0x9F or 0xE0 <= first_byte <= 0xEF:
             return 'double-byte-kanji'
         else:
-            raise None
+            return None
 
 
 def _build_alphabet_single_byte(byte_start: int, byte_end: int) -> list[str]:

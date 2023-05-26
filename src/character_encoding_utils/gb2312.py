@@ -97,7 +97,7 @@ def query_category(c: str) -> str | None:
     elif 56 <= row <= 87:
         return 'level-2'
     else:
-        raise None
+        return None
 
 
 def _build_alphabet_by_rows_between(row_start: int, row_end: int) -> list[str]:
