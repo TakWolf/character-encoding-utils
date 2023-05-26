@@ -74,7 +74,7 @@ def decode(bs: bytes | bytearray) -> str:
 
 def query_coord(c: str) -> tuple[int, int]:
     if len(c) != 1:
-        raise KSX1001Exception('must be one character')
+        raise KSX1001Exception('Must be one character')
     try:
         bs = encode(c)
     except KSX1001EncodeError as e:
