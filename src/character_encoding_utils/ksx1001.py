@@ -1,5 +1,5 @@
 
-_euc_offset = 0xA0
+_EUC_OFFSET = 0xA0
 
 
 class KSX1001Exception(Exception):
@@ -83,8 +83,8 @@ def query_coord(c: str) -> tuple[int, int]:
         raise KSX1001Exception(f"'{c}' is a ascii character")
     elif bs.startswith(b'\xa4\xd4') and len(bs) > 2:
         raise KSX1001Exception(f"'{c}' is not a 'ksx1001' character")
-    row = bs[0] - _euc_offset
-    col = bs[1] - _euc_offset
+    row = bs[0] - _EUC_OFFSET
+    col = bs[1] - _EUC_OFFSET
     return row, col
 
 
@@ -92,7 +92,7 @@ def query_chr(row: int, col: int):
     if row < 1 or row > 94 or col < 1 or col > 94:
         raise KSX1001Exception(f"'row' and 'col' must between 1 and 94")
     try:
-        return decode(bytes([row + _euc_offset, col + _euc_offset]))
+        return decode(bytes([row + _EUC_OFFSET, col + _EUC_OFFSET]))
     except KSX1001DecodeError as e:
         raise KSX1001Exception(f"'ksx1001' coord at ({row}, {col}) is undefined'") from e
 

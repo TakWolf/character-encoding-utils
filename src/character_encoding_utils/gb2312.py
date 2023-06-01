@@ -1,5 +1,5 @@
 
-_euc_offset = 0xA0
+_EUC_OFFSET = 0xA0
 
 
 class GB2312Exception(Exception):
@@ -67,8 +67,8 @@ def query_coord(c: str) -> tuple[int, int]:
         raise GB2312Exception(f"'{c}' is not a 'gb2312' character") from e
     if len(bs) == 1:
         raise GB2312Exception(f"'{c}' is a ascii character")
-    row = bs[0] - _euc_offset
-    col = bs[1] - _euc_offset
+    row = bs[0] - _EUC_OFFSET
+    col = bs[1] - _EUC_OFFSET
     return row, col
 
 
@@ -76,7 +76,7 @@ def query_chr(row: int, col: int) -> str:
     if row < 1 or row > 94 or col < 1 or col > 94:
         raise GB2312Exception(f"'row' and 'col' must between 1 and 94")
     try:
-        return decode(bytes([row + _euc_offset, col + _euc_offset]))
+        return decode(bytes([row + _EUC_OFFSET, col + _EUC_OFFSET]))
     except GB2312DecodeError as e:
         raise GB2312Exception(f"'gb2312' coord at ({row}, {col}) is undefined'") from e
 
