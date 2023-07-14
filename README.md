@@ -14,7 +14,7 @@ Now support:
 
 ## Installation
 
-```commandline
+```shell
 pip install character-encoding-utils
 ```
 
