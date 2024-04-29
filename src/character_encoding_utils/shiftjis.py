@@ -7,21 +7,21 @@ class ShiftJISException(Exception):
 
 class ShiftJISEncodeError(ShiftJISException):
     def __init__(self, obj: str, position: int, reason: str):
+        super().__init__(f"'shift-jis' codec can't encode character '\\u{ord(obj):x}' in position {position}: {reason}")
         self.object = obj
         self.position = position
         self.reason = reason
-        super().__init__(f"'shift-jis' codec can't encode character '\\u{ord(obj):x}' in position {position}: {reason}")
 
 
 class ShiftJISDecodeError(ShiftJISException):
     def __init__(self, obj: bytes, position: int, reason: str):
-        self.object = obj
-        self.position = position
-        self.reason = reason
         if len(obj) <= 1:
             super().__init__(f"'shift-jis' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
         else:
             super().__init__(f"'shift-jis' codec can't decode bytes in position {position}-{position + len(obj) - 1}: {reason}")
+        self.object = obj
+        self.position = position
+        self.reason = reason
 
 
 def encode(cs: str) -> bytes:
