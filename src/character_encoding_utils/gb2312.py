@@ -7,6 +7,10 @@ class GB2312Exception(Exception):
 
 
 class GB2312EncodeError(GB2312Exception):
+    object: str
+    position: int
+    reason: str
+
     def __init__(self, obj: str, position: int, reason: str):
         super().__init__(f"'gb2312' codec can't encode character '\\u{ord(obj):x}' in position {position}: {reason}")
         self.object = obj
@@ -15,6 +19,10 @@ class GB2312EncodeError(GB2312Exception):
 
 
 class GB2312DecodeError(GB2312Exception):
+    object: bytes
+    position: int
+    reason: str
+
     def __init__(self, obj: bytes, position: int, reason: str):
         if len(obj) <= 1:
             super().__init__(f"'gb2312' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
