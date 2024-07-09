@@ -76,9 +76,9 @@ def query_coord(c: str) -> tuple[int, int]:
     try:
         bs = encode(c)
     except GB2312EncodeError as e:
-        raise GB2312Exception(f"'{c}' is not a 'gb2312' character") from e
+        raise GB2312Exception(f"'\\u{ord(c):x}' is not a 'gb2312' character") from e
     if len(bs) == 1:
-        raise GB2312Exception(f"'{c}' is a ascii character")
+        raise GB2312Exception(f"'\\u{ord(c):x}' is a ascii character")
     row = bs[0] - _EUC_OFFSET
     col = bs[1] - _EUC_OFFSET
     return row, col

@@ -90,11 +90,11 @@ def query_coord(c: str) -> tuple[int, int]:
     try:
         bs = encode(c)
     except KSX1001EncodeError as e:
-        raise KSX1001Exception(f"'{c}' is not a 'ksx1001' character") from e
+        raise KSX1001Exception(f"'\\u{ord(c):x}' is not a 'ksx1001' character") from e
     if len(bs) == 1:
-        raise KSX1001Exception(f"'{c}' is a ascii character")
+        raise KSX1001Exception(f"'\\u{ord(c):x}' is a ascii character")
     elif bs.startswith(b'\xa4\xd4') and len(bs) > 2:
-        raise KSX1001Exception(f"'{c}' is not a 'ksx1001' character")
+        raise KSX1001Exception(f"'\\u{ord(c):x}' is not a 'ksx1001' character")
     row = bs[0] - _EUC_OFFSET
     col = bs[1] - _EUC_OFFSET
     return row, col

@@ -114,9 +114,9 @@ def query_code(c: str) -> int:
     try:
         bs = encode(c)
     except Big5EncodeError as e:
-        raise Big5Exception(f"'{c}' is not a 'big5' character") from e
+        raise Big5Exception(f"'\\u{ord(c):x}' is not a 'big5' character") from e
     if len(bs) == 1:
-        raise Big5Exception(f"'{c}' is a ascii character")
+        raise Big5Exception(f"'\\u{ord(c):x}' is a ascii character")
     code = int(f'{bs[0]:02x}{bs[1]:02x}', 16)
     return code
 
