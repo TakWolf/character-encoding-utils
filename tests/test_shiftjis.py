@@ -10,26 +10,26 @@ def test_codec():
 
     with pytest.raises(ShiftJISEncodeError) as info:
         shiftjis.encode('abc가')
-    assert info.value.object == '가'
+    assert info.value.obj == '가'
     assert info.value.position == 3
     assert info.value.reason == 'illegal multibyte sequence'
 
     with pytest.raises(ShiftJISDecodeError) as info:
         shiftjis.decode(b'abc\x93\xfa\x96')
-    assert info.value.object == b'\x96'
+    assert info.value.obj == b'\x96'
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 
     with pytest.raises(ShiftJISEncodeError) as info:
         shiftjis.encode('\\')
-    assert info.value.object == '\\'
+    assert info.value.obj == '\\'
     assert info.value.position == 0
     assert '\\' in info.value.reason
     assert '¥' in info.value.reason
 
     with pytest.raises(ShiftJISEncodeError) as info:
         shiftjis.encode('~')
-    assert info.value.object == '~'
+    assert info.value.obj == '~'
     assert info.value.position == 0
     assert '~' in info.value.reason
     assert '‾' in info.value.reason

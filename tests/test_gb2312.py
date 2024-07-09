@@ -10,13 +10,13 @@ def test_codec():
 
     with pytest.raises(GB2312EncodeError) as info:
         gb2312.encode('abc가')
-    assert info.value.object == '가'
+    assert info.value.obj == '가'
     assert info.value.position == 3
     assert info.value.reason == 'illegal multibyte sequence'
 
     with pytest.raises(GB2312DecodeError) as info:
         gb2312.decode(b'abc\xd6\xd0\xb9')
-    assert info.value.object == b'\xb9'
+    assert info.value.obj == b'\xb9'
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 

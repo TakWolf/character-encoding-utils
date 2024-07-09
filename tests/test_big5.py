@@ -10,13 +10,13 @@ def test_codec():
 
     with pytest.raises(Big5EncodeError) as info:
         big5.encode('abc가')
-    assert info.value.object == '가'
+    assert info.value.obj == '가'
     assert info.value.position == 3
     assert info.value.reason == 'illegal multibyte sequence'
 
     with pytest.raises(Big5DecodeError) as info:
         big5.decode(b'abc\xa4\xa4\xb0')
-    assert info.value.object == b'\xb0'
+    assert info.value.obj == b'\xb0'
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 

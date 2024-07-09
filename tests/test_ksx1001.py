@@ -10,13 +10,13 @@ def test_codec():
 
     with pytest.raises(KSX1001EncodeError) as info:
         ksx1001.encode('abc😈')
-    assert info.value.object == '😈'
+    assert info.value.obj == '😈'
     assert info.value.position == 3
     assert info.value.reason == 'illegal multibyte sequence'
 
     with pytest.raises(KSX1001DecodeError) as info:
         ksx1001.decode(b'abc\xb0\xa1\xc3')
-    assert info.value.object == b'\xc3'
+    assert info.value.obj == b'\xc3'
     assert info.value.position == 5
     assert info.value.reason == 'incomplete multibyte sequence'
 

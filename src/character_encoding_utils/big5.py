@@ -4,30 +4,34 @@ class Big5Exception(Exception):
 
 
 class Big5EncodeError(Big5Exception):
-    object: str
+    obj: str
     position: int
     reason: str
 
     def __init__(self, obj: str, position: int, reason: str):
-        super().__init__(f"'big5' codec can't encode character '\\u{ord(obj):x}' in position {position}: {reason}")
-        self.object = obj
+        self.obj = obj
         self.position = position
         self.reason = reason
 
+    def __str__(self) -> str:
+        return f"'big5' codec can't encode character '\\u{ord(self.obj):x}' in position {self.position}: {self.reason}"
+
 
 class Big5DecodeError(Big5Exception):
-    object: bytes
+    obj: bytes
     position: int
     reason: str
 
     def __init__(self, obj: bytes, position: int, reason: str):
-        if len(obj) <= 1:
-            super().__init__(f"'big5' codec can't decode byte 0x{obj[0]:x} in position {position}: {reason}")
-        else:
-            super().__init__(f"'big5' codec can't decode bytes in position {position}-{position + len(obj) - 1}: {reason}")
-        self.object = obj
+        self.obj = obj
         self.position = position
         self.reason = reason
+
+    def __str__(self) -> str:
+        if len(self.obj) <= 1:
+            return f"'big5' codec can't decode byte 0x{self.obj[0]:x} in position {self.position}: {self.reason}"
+        else:
+            return f"'big5' codec can't decode bytes in position {self.position}-{self.position + len(self.obj) - 1}: {self.reason}"
 
 
 def encode(cs: str) -> bytes:
