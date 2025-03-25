@@ -58,4 +58,4 @@ assert ksx1001.decode(bs) == 'abc가쳰'
 
 ## License
 
-Under the [MIT license](LICENSE).
+[MIT License](LICENSE)
