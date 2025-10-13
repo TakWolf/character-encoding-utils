@@ -1,3 +1,7 @@
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
 [project]
 name = "character-encoding-utils"
 version = "0.0.10"
@@ -28,6 +32,7 @@ dev = [
     "pytest>=8.4.2",
 ]
 
-[build-system]
-requires = ["uv_build"]
-build-backend = "uv_build"
+[project.urls]
+Homepage = "https://github.com/TakWolf/character-encoding-utils"
+Source = "https://github.com/TakWolf/character-encoding-utils"
+Issues = "https://github.com/TakWolf/character-encoding-utils/issues"
