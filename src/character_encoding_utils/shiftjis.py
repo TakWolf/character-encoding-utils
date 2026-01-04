@@ -39,15 +39,16 @@ class ShiftJISDecodeError(ShiftJISException):
 def encode(cs: str) -> bytes:
     bs = bytearray()
     for position, c in enumerate(cs):
-        if c == '\\':
-            raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '\\' is replaced with '¥'")
-        elif c == '~':
-            raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '~' is replaced with '‾'")
-        else:
-            try:
-                bs.extend(c.encode('shift-jis'))
-            except UnicodeEncodeError as e:
-                raise ShiftJISEncodeError(c, position, e.reason) from e
+        match c:
+            case '\\':
+                raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '\\' is replaced with '¥'")
+            case '~':
+                raise ShiftJISEncodeError(c, position, f"in 'shift-jis' the character '~' is replaced with '‾'")
+            case _:
+                try:
+                    bs.extend(c.encode('shift-jis'))
+                except UnicodeEncodeError as e:
+                    raise ShiftJISEncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
@@ -66,15 +67,16 @@ def decode(bs: bytes | bytearray) -> str:
                 bc.append(bs[cursor])
                 cursor += 1
 
-        if bc == b'\\':
-            cs.append('¥')
-        elif bc == b'~':
-            cs.append('‾')
-        else:
-            try:
-                cs.append(bc.decode('shift-jis'))
-            except UnicodeDecodeError as e:
-                raise ShiftJISDecodeError(bc, passed, e.reason) from e
+        match bc:
+            case b'\\':
+                cs.append('¥')
+            case b'~':
+                cs.append('‾')
+            case _:
+                try:
+                    cs.append(bc.decode('shift-jis'))
+                except UnicodeDecodeError as e:
+                    raise ShiftJISDecodeError(bc, passed, e.reason) from e
         passed += len(bc)
     return ''.join(cs)
 

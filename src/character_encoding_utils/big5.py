@@ -37,32 +37,33 @@ class Big5DecodeError(Big5Exception):
 def encode(cs: str) -> bytes:
     bs = bytearray()
     for position, c in enumerate(cs):
-        if c == '〸':  # 0x3038
-            bs.extend(b'\xa2\xcc')
-        elif c == '〹':  # 0x3039
-            bs.extend(b'\xa2\xcd')
-        elif c == '〺':  # 0x303A
-            bs.extend(b'\xa2\xce')
-        elif c == '十':  # 0x5341
-            bs.extend(b'\xa4\x51')
-        elif c == '卄':  # 0x5344
-            # Big5 不包含汉字的 '卄'
-            raise Big5EncodeError(c, position, 'illegal multibyte sequence')
-        elif c == '卅':  # 0x5345
-            bs.extend(b'\xa4\xca')
-        elif c == '／':  # 0xFF0F
-            bs.extend(b'\xa1\xfe')
-        elif c == '＼':  # 0xFF3C
-            bs.extend(b'\xa2\x40')
-        elif c == '∕':  # 0x2215
-            bs.extend(b'\xa2\x41')
-        elif c == '﹨':  # 0xFE68
-            bs.extend(b'\xa2\x42')
-        else:
-            try:
-                bs.extend(c.encode('big5'))
-            except UnicodeEncodeError as e:
-                raise Big5EncodeError(c, position, e.reason) from e
+        match c:
+            case '〸':  # 0x3038
+                bs.extend(b'\xa2\xcc')
+            case '〹':  # 0x3039
+                bs.extend(b'\xa2\xcd')
+            case '〺':  # 0x303A
+                bs.extend(b'\xa2\xce')
+            case '十':  # 0x5341
+                bs.extend(b'\xa4\x51')
+            case '卄':  # 0x5344
+                # Big5 不包含汉字的 '卄'
+                raise Big5EncodeError(c, position, 'illegal multibyte sequence')
+            case '卅':  # 0x5345
+                bs.extend(b'\xa4\xca')
+            case '／':  # 0xFF0F
+                bs.extend(b'\xa1\xfe')
+            case '＼':  # 0xFF3C
+                bs.extend(b'\xa2\x40')
+            case '∕':  # 0x2215
+                bs.extend(b'\xa2\x41')
+            case '﹨':  # 0xFE68
+                bs.extend(b'\xa2\x42')
+            case _:
+                try:
+                    bs.extend(c.encode('big5'))
+                except UnicodeEncodeError as e:
+                    raise Big5EncodeError(c, position, e.reason) from e
     return bytes(bs)
 
 
@@ -81,29 +82,30 @@ def decode(bs: bytes | bytearray) -> str:
                 bc.append(bs[cursor])
                 cursor += 1
 
-        if bc == b'\xa2\xcc':
-            cs.append('〸')  # 0x3038
-        elif bc == b'\xa2\xcd':
-            cs.append('〹')  # 0x3039
-        elif bc == b'\xa2\xce':
-            cs.append('〺')  # 0x303A
-        elif bc == b'\xa4\x51':
-            cs.append('十')  # 0x5341
-        elif bc == b'\xa4\xca':
-            cs.append('卅')  # 0x5345
-        elif bc == b'\xa1\xfe':
-            cs.append('／')  # 0xFF0F
-        elif bc == b'\xa2\x40':
-            cs.append('＼')  # 0xFF3C
-        elif bc == b'\xa2\x41':
-            cs.append('∕')  # 0x2215
-        elif bc == b'\xa2\x42':
-            cs.append('﹨')  # 0xFE68
-        else:
-            try:
-                cs.append(bc.decode('big5'))
-            except UnicodeDecodeError as e:
-                raise Big5DecodeError(bc, passed, e.reason) from e
+        match bc:
+            case b'\xa2\xcc':
+                cs.append('〸')  # 0x3038
+            case b'\xa2\xcd':
+                cs.append('〹')  # 0x3039
+            case b'\xa2\xce':
+                cs.append('〺')  # 0x303A
+            case b'\xa4\x51':
+                cs.append('十')  # 0x5341
+            case b'\xa4\xca':
+                cs.append('卅')  # 0x5345
+            case b'\xa1\xfe':
+                cs.append('／')  # 0xFF0F
+            case b'\xa2\x40':
+                cs.append('＼')  # 0xFF3C
+            case b'\xa2\x41':
+                cs.append('∕')  # 0x2215
+            case b'\xa2\x42':
+                cs.append('﹨')  # 0xFE68
+            case _:
+                try:
+                    cs.append(bc.decode('big5'))
+                except UnicodeDecodeError as e:
+                    raise Big5DecodeError(bc, passed, e.reason) from e
         passed += len(bc)
     return ''.join(cs)
 

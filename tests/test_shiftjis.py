@@ -108,16 +108,17 @@ def test_unicode():
         c = chr(code_point)
         category = shiftjis.query_category(c)
 
-        if category == 'single-byte-ascii-control':
-            alphabet_single_byte_ascii_control.append(c)
-        elif category == 'single-byte-ascii-printable':
-            alphabet_single_byte_ascii_printable.append(c)
-        elif category == 'single-byte-half-width-katakana':
-            alphabet_single_byte_half_width_katakana.append(c)
-        elif category == 'double-byte-other':
-            alphabet_double_byte_other.append(c)
-        elif category == 'double-byte-kanji':
-            alphabet_double_byte_kanji.append(c)
+        match category:
+            case 'single-byte-ascii-control':
+                alphabet_single_byte_ascii_control.append(c)
+            case 'single-byte-ascii-printable':
+                alphabet_single_byte_ascii_printable.append(c)
+            case 'single-byte-half-width-katakana':
+                alphabet_single_byte_half_width_katakana.append(c)
+            case 'double-byte-other':
+                alphabet_double_byte_other.append(c)
+            case 'double-byte-kanji':
+                alphabet_double_byte_kanji.append(c)
 
         if category is not None:
             alphabet.append(c)

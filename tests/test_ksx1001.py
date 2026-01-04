@@ -123,12 +123,13 @@ def test_unicode():
         c = chr(code_point)
         category = ksx1001.query_category(c)
 
-        if category == 'other':
-            alphabet_other.append(c)
-        elif category == 'syllable':
-            alphabet_syllable.append(c)
-        elif category == 'hanja':
-            alphabet_hanja.append(c)
+        match category:
+            case 'other':
+                alphabet_other.append(c)
+            case 'syllable':
+                alphabet_syllable.append(c)
+            case 'hanja':
+                alphabet_hanja.append(c)
 
         if category is not None:
             alphabet.append(c)

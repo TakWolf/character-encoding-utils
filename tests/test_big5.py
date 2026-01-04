@@ -157,12 +157,13 @@ def test_unicode():
         c = chr(code_point)
         category = big5.query_category(c)
 
-        if category == 'other':
-            alphabet_other.append(c)
-        elif category == 'level-1':
-            alphabet_level_1.append(c)
-        elif category == 'level-2':
-            alphabet_level_2.append(c)
+        match category:
+            case 'other':
+                alphabet_other.append(c)
+            case 'level-1':
+                alphabet_level_1.append(c)
+            case 'level-2':
+                alphabet_level_2.append(c)
 
         if category is not None:
             alphabet.append(c)
