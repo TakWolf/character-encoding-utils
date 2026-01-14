@@ -1,7 +1,3 @@
-[build-system]
-requires = ["uv_build"]
-build-backend = "uv_build"
-
 [project]
 name = "character-encoding-utils"
 version = "0.0.12"
@@ -36,3 +32,7 @@ dev = [
 Homepage = "https://github.com/TakWolf/character-encoding-utils"
 Source = "https://github.com/TakWolf/character-encoding-utils"
 Issues = "https://github.com/TakWolf/character-encoding-utils/issues"
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
