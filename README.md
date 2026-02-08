@@ -1,7 +1,7 @@
 # Character Encoding Utils
 
-[![Python](https://img.shields.io/badge/python-3.10-brightgreen)](https://www.python.org)
-[![PyPI](https://img.shields.io/pypi/v/character-encoding-utils)](https://pypi.org/project/character-encoding-utils/)
+[![Python](https://img.shields.io/badge/python-3.10-brightgreen?style=flat-square)](https://www.python.org)
+[![PyPI](https://img.shields.io/pypi/v/character-encoding-utils?style=flat-square)](https://pypi.org/project/character-encoding-utils/)
 
 Some [character encoding](https://en.wikipedia.org/wiki/Character_encoding) utils.
 
