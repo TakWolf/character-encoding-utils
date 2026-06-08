@@ -147,19 +147,19 @@ _alphabet = _alphabet_other + _alphabet_syllable + _alphabet_hanja
 
 
 def get_alphabet_other() -> list[str]:
-    return list(_alphabet_other)
+    return _alphabet_other.copy()
 
 
 def get_alphabet_syllable() -> list[str]:
-    return list(_alphabet_syllable)
+    return _alphabet_syllable.copy()
 
 
 def get_alphabet_hanja() -> list[str]:
-    return list(_alphabet_hanja)
+    return _alphabet_hanja.copy()
 
 
 def get_alphabet() -> list[str]:
-    return list(_alphabet)
+    return _alphabet.copy()
 
 
 def get_other_count() -> int:

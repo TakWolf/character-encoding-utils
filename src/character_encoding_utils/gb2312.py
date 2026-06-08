@@ -131,19 +131,19 @@ _alphabet = _alphabet_other + _alphabet_level_1 + _alphabet_level_2
 
 
 def get_alphabet_other() -> list[str]:
-    return list(_alphabet_other)
+    return _alphabet_other.copy()
 
 
 def get_alphabet_level_1() -> list[str]:
-    return list(_alphabet_level_1)
+    return _alphabet_level_1.copy()
 
 
 def get_alphabet_level_2() -> list[str]:
-    return list(_alphabet_level_2)
+    return _alphabet_level_2.copy()
 
 
 def get_alphabet() -> list[str]:
-    return list(_alphabet)
+    return _alphabet.copy()
 
 
 def get_other_count() -> int:

@@ -182,27 +182,27 @@ _alphabet = _alphabet_single_byte_ascii_control + _alphabet_single_byte_ascii_pr
 
 
 def get_alphabet_single_byte_ascii_control() -> list[str]:
-    return list(_alphabet_single_byte_ascii_control)
+    return _alphabet_single_byte_ascii_control.copy()
 
 
 def get_alphabet_single_byte_ascii_printable() -> list[str]:
-    return list(_alphabet_single_byte_ascii_printable)
+    return _alphabet_single_byte_ascii_printable.copy()
 
 
 def get_alphabet_single_byte_half_width_katakana() -> list[str]:
-    return list(_alphabet_single_byte_half_width_katakana)
+    return _alphabet_single_byte_half_width_katakana.copy()
 
 
 def get_alphabet_double_byte_other() -> list[str]:
-    return list(_alphabet_double_byte_other)
+    return _alphabet_double_byte_other.copy()
 
 
 def get_alphabet_double_byte_kanji() -> list[str]:
-    return list(_alphabet_double_byte_kanji)
+    return _alphabet_double_byte_kanji.copy()
 
 
 def get_alphabet() -> list[str]:
-    return list(_alphabet)
+    return _alphabet.copy()
 
 
 def get_single_byte_ascii_control_count() -> int:
