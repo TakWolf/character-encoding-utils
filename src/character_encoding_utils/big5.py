@@ -112,7 +112,7 @@ def decode(bs: bytes | bytearray) -> str:
 
 def query_code(c: str) -> int:
     if len(c) != 1:
-        raise Big5Exception('Must be one character')
+        raise Big5Exception('must be one character')
     try:
         bs = encode(c)
     except Big5EncodeError as e:
