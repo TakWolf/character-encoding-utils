@@ -140,39 +140,39 @@ def _build_alphabet_by_rows_between(row_start: int, row_end: int) -> list[str]:
     return alphabet
 
 
-_alphabet_other = _build_alphabet_by_rows_between(1, 12)
-_alphabet_syllable = _build_alphabet_by_rows_between(16, 40)
-_alphabet_hanja = _build_alphabet_by_rows_between(42, 93)
-_alphabet = _alphabet_other + _alphabet_syllable + _alphabet_hanja
+_ALPHABET_OTHER = _build_alphabet_by_rows_between(1, 12)
+_ALPHABET_SYLLABLE = _build_alphabet_by_rows_between(16, 40)
+_ALPHABET_HANJA = _build_alphabet_by_rows_between(42, 93)
+_ALPHABET = _ALPHABET_OTHER + _ALPHABET_SYLLABLE + _ALPHABET_HANJA
 
 
 def get_alphabet_other() -> list[str]:
-    return _alphabet_other.copy()
+    return _ALPHABET_OTHER.copy()
 
 
 def get_alphabet_syllable() -> list[str]:
-    return _alphabet_syllable.copy()
+    return _ALPHABET_SYLLABLE.copy()
 
 
 def get_alphabet_hanja() -> list[str]:
-    return _alphabet_hanja.copy()
+    return _ALPHABET_HANJA.copy()
 
 
 def get_alphabet() -> list[str]:
-    return _alphabet.copy()
+    return _ALPHABET.copy()
 
 
 def get_other_count() -> int:
-    return len(_alphabet_other)
+    return len(_ALPHABET_OTHER)
 
 
 def get_syllable_count() -> int:
-    return len(_alphabet_syllable)
+    return len(_ALPHABET_SYLLABLE)
 
 
 def get_hanja_count() -> int:
-    return len(_alphabet_hanja)
+    return len(_ALPHABET_HANJA)
 
 
 def get_count() -> int:
-    return len(_alphabet)
+    return len(_ALPHABET)

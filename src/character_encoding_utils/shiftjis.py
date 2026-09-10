@@ -172,58 +172,58 @@ def _build_alphabet_double_byte_kanji() -> list[str]:
     return alphabet
 
 
-_alphabet_single_byte_ascii_control = _build_alphabet_single_byte(0x00, 0x1F)
-_alphabet_single_byte_ascii_control.append(chr(0x7F))
-_alphabet_single_byte_ascii_printable = _build_alphabet_single_byte(0x20, 0x7E)
-_alphabet_single_byte_half_width_katakana = _build_alphabet_single_byte(0xA1, 0xDF)
-_alphabet_double_byte_other = _build_alphabet_double_byte_other()
-_alphabet_double_byte_kanji = _build_alphabet_double_byte_kanji()
-_alphabet = _alphabet_single_byte_ascii_control + _alphabet_single_byte_ascii_printable + _alphabet_single_byte_half_width_katakana + _alphabet_double_byte_other + _alphabet_double_byte_kanji
+_ALPHABET_SINGLE_BYTE_ASCII_CONTROL = _build_alphabet_single_byte(0x00, 0x1F)
+_ALPHABET_SINGLE_BYTE_ASCII_CONTROL.append(chr(0x7F))
+_ALPHABET_SINGLE_BYTE_ASCII_PRINTABLE = _build_alphabet_single_byte(0x20, 0x7E)
+_ALPHABET_SINGLE_BYTE_HALF_WIDTH_KATAKANA = _build_alphabet_single_byte(0xA1, 0xDF)
+_ALPHABET_DOUBLE_BYTE_OTHER = _build_alphabet_double_byte_other()
+_ALPHABET_DOUBLE_BYTE_KANJI = _build_alphabet_double_byte_kanji()
+_ALPHABET = _ALPHABET_SINGLE_BYTE_ASCII_CONTROL + _ALPHABET_SINGLE_BYTE_ASCII_PRINTABLE + _ALPHABET_SINGLE_BYTE_HALF_WIDTH_KATAKANA + _ALPHABET_DOUBLE_BYTE_OTHER + _ALPHABET_DOUBLE_BYTE_KANJI
 
 
 def get_alphabet_single_byte_ascii_control() -> list[str]:
-    return _alphabet_single_byte_ascii_control.copy()
+    return _ALPHABET_SINGLE_BYTE_ASCII_CONTROL.copy()
 
 
 def get_alphabet_single_byte_ascii_printable() -> list[str]:
-    return _alphabet_single_byte_ascii_printable.copy()
+    return _ALPHABET_SINGLE_BYTE_ASCII_PRINTABLE.copy()
 
 
 def get_alphabet_single_byte_half_width_katakana() -> list[str]:
-    return _alphabet_single_byte_half_width_katakana.copy()
+    return _ALPHABET_SINGLE_BYTE_HALF_WIDTH_KATAKANA.copy()
 
 
 def get_alphabet_double_byte_other() -> list[str]:
-    return _alphabet_double_byte_other.copy()
+    return _ALPHABET_DOUBLE_BYTE_OTHER.copy()
 
 
 def get_alphabet_double_byte_kanji() -> list[str]:
-    return _alphabet_double_byte_kanji.copy()
+    return _ALPHABET_DOUBLE_BYTE_KANJI.copy()
 
 
 def get_alphabet() -> list[str]:
-    return _alphabet.copy()
+    return _ALPHABET.copy()
 
 
 def get_single_byte_ascii_control_count() -> int:
-    return len(_alphabet_single_byte_ascii_control)
+    return len(_ALPHABET_SINGLE_BYTE_ASCII_CONTROL)
 
 
 def get_single_byte_ascii_printable_count() -> int:
-    return len(_alphabet_single_byte_ascii_printable)
+    return len(_ALPHABET_SINGLE_BYTE_ASCII_PRINTABLE)
 
 
 def get_single_byte_half_width_katakana_count() -> int:
-    return len(_alphabet_single_byte_half_width_katakana)
+    return len(_ALPHABET_SINGLE_BYTE_HALF_WIDTH_KATAKANA)
 
 
 def get_double_byte_other_count() -> int:
-    return len(_alphabet_double_byte_other)
+    return len(_ALPHABET_DOUBLE_BYTE_OTHER)
 
 
 def get_double_byte_kanji_count() -> int:
-    return len(_alphabet_double_byte_kanji)
+    return len(_ALPHABET_DOUBLE_BYTE_KANJI)
 
 
 def get_count() -> int:
-    return len(_alphabet)
+    return len(_ALPHABET)

@@ -124,39 +124,39 @@ def _build_alphabet_by_rows_between(row_start: int, row_end: int) -> list[str]:
     return alphabet
 
 
-_alphabet_other = _build_alphabet_by_rows_between(1, 9)
-_alphabet_level_1 = _build_alphabet_by_rows_between(16, 55)
-_alphabet_level_2 = _build_alphabet_by_rows_between(56, 87)
-_alphabet = _alphabet_other + _alphabet_level_1 + _alphabet_level_2
+_ALPHABET_OTHER = _build_alphabet_by_rows_between(1, 9)
+_ALPHABET_LEVEL_1 = _build_alphabet_by_rows_between(16, 55)
+_ALPHABET_LEVEL_2 = _build_alphabet_by_rows_between(56, 87)
+_ALPHABET = _ALPHABET_OTHER + _ALPHABET_LEVEL_1 + _ALPHABET_LEVEL_2
 
 
 def get_alphabet_other() -> list[str]:
-    return _alphabet_other.copy()
+    return _ALPHABET_OTHER.copy()
 
 
 def get_alphabet_level_1() -> list[str]:
-    return _alphabet_level_1.copy()
+    return _ALPHABET_LEVEL_1.copy()
 
 
 def get_alphabet_level_2() -> list[str]:
-    return _alphabet_level_2.copy()
+    return _ALPHABET_LEVEL_2.copy()
 
 
 def get_alphabet() -> list[str]:
-    return _alphabet.copy()
+    return _ALPHABET.copy()
 
 
 def get_other_count() -> int:
-    return len(_alphabet_other)
+    return len(_ALPHABET_OTHER)
 
 
 def get_level_1_count() -> int:
-    return len(_alphabet_level_1)
+    return len(_ALPHABET_LEVEL_1)
 
 
 def get_level_2_count() -> int:
-    return len(_alphabet_level_2)
+    return len(_ALPHABET_LEVEL_2)
 
 
 def get_count() -> int:
-    return len(_alphabet)
+    return len(_ALPHABET)
