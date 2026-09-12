@@ -4,7 +4,7 @@ from character_encoding_utils import ksx1001
 from character_encoding_utils.ksx1001 import KSX1001Exception, KSX1001EncodeError, KSX1001DecodeError
 
 
-def test_codec():
+def test_codec() -> None:
     assert ksx1001.encode('abc가쳰') == 'abc가쳰'.encode('ksx1001')
     assert ksx1001.decode(b'abc\xb0\xa1\xc3\xc8') == b'abc\xb0\xa1\xc3\xc8'.decode('ksx1001')
 
@@ -27,7 +27,7 @@ def test_codec():
         assert ksx1001.decode(ksx1001.encode(c)) == c
 
 
-def test_query_coord():
+def test_query_coord() -> None:
     assert ksx1001.query_coord('ㆌ') == (4, 92)
     assert ksx1001.query_coord('φ') == (5, 85)
     assert ksx1001.query_coord('떰') == (22, 22)
@@ -45,7 +45,7 @@ def test_query_coord():
     assert isinstance(info.value.__cause__, KSX1001EncodeError)
 
 
-def test_query_chr():
+def test_query_chr() -> None:
     assert ksx1001.query_chr(1, 50) == '⌒'
     assert ksx1001.query_chr(16, 1) == '가'
     assert ksx1001.query_chr(35, 40) == '쳰'
@@ -62,7 +62,7 @@ def test_query_chr():
     assert isinstance(info.value.__cause__, KSX1001DecodeError)
 
 
-def test_query_category():
+def test_query_category() -> None:
     categories = ksx1001.get_categories()
     assert len(categories) == 3
     assert 'other' in categories
@@ -76,7 +76,7 @@ def test_query_category():
     assert ksx1001.query_category('😈') is None
 
 
-def test_alphabet():
+def test_alphabet() -> None:
     alphabet = ksx1001.get_alphabet_other()
     assert len(alphabet) == 988
     for c in alphabet:
@@ -106,14 +106,14 @@ def test_alphabet():
         assert ksx1001.query_category(c) is not None
 
 
-def test_count():
+def test_count() -> None:
     assert ksx1001.get_other_count() == 988
     assert ksx1001.get_syllable_count() == 2350
     assert ksx1001.get_hanja_count() == 4888
     assert ksx1001.get_count() == 8226
 
 
-def test_unicode():
+def test_unicode() -> None:
     alphabet_other = []
     alphabet_syllable = []
     alphabet_hanja = []

@@ -8,7 +8,7 @@ class Big5EncodeError(Big5Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: str, position: int, reason: str):
+    def __init__(self, obj: str, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason
@@ -22,7 +22,7 @@ class Big5DecodeError(Big5Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: bytes, position: int, reason: str):
+    def __init__(self, obj: bytes, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason

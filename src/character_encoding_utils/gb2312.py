@@ -11,7 +11,7 @@ class GB2312EncodeError(GB2312Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: str, position: int, reason: str):
+    def __init__(self, obj: str, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason
@@ -25,7 +25,7 @@ class GB2312DecodeError(GB2312Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: bytes, position: int, reason: str):
+    def __init__(self, obj: bytes, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason

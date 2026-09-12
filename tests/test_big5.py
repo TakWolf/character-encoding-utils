@@ -4,7 +4,7 @@ from character_encoding_utils import big5
 from character_encoding_utils.big5 import Big5Exception, Big5EncodeError, Big5DecodeError
 
 
-def test_codec():
+def test_codec() -> None:
     assert big5.encode('abc中國') == 'abc中國'.encode('big5')
     assert big5.decode(b'abc\xa4\xa4\xb0\xea') == b'abc\xa4\xa4\xb0\xea'.decode('big5')
 
@@ -62,7 +62,7 @@ def test_codec():
     assert big5.decode(big5.encode(c)) == c
 
 
-def test_query_code():
+def test_query_code() -> None:
     assert big5.query_code('　') == 0xA140
     assert big5.query_code('¢') == 0xA246
     assert big5.query_code('一') == 0xA440
@@ -80,7 +80,7 @@ def test_query_code():
     assert isinstance(info.value.__cause__, Big5EncodeError)
 
 
-def test_query_chr():
+def test_query_chr() -> None:
     assert big5.query_chr(0xA140) == '　'
     assert big5.query_chr(0xA246) == '¢'
     assert big5.query_chr(0xA440) == '一'
@@ -96,7 +96,7 @@ def test_query_chr():
     assert isinstance(info.value.__cause__, Big5DecodeError)
 
 
-def test_query_category():
+def test_query_category() -> None:
     categories = big5.get_categories()
     assert len(categories) == 3
     assert 'other' in categories
@@ -110,7 +110,7 @@ def test_query_category():
     assert big5.query_category('가') is None
 
 
-def test_alphabet():
+def test_alphabet() -> None:
     alphabet = big5.get_alphabet_other()
     assert len(alphabet) == 408
     for c in alphabet:
@@ -140,14 +140,14 @@ def test_alphabet():
         assert big5.query_category(c) is not None
 
 
-def test_count():
+def test_count() -> None:
     assert big5.get_other_count() == 408
     assert big5.get_level_1_count() == 5401
     assert big5.get_level_2_count() == 7652
     assert big5.get_count() == 13461
 
 
-def test_unicode():
+def test_unicode() -> None:
     alphabet_other = []
     alphabet_level_1 = []
     alphabet_level_2 = []

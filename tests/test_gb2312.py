@@ -4,7 +4,7 @@ from character_encoding_utils import gb2312
 from character_encoding_utils.gb2312 import GB2312Exception, GB2312EncodeError, GB2312DecodeError
 
 
-def test_codec():
+def test_codec() -> None:
     assert gb2312.encode('abc中国') == 'abc中国'.encode('gb2312')
     assert gb2312.decode(b'abc\xd6\xd0\xb9\xfa') == b'abc\xd6\xd0\xb9\xfa'.decode('gb2312')
 
@@ -21,7 +21,7 @@ def test_codec():
     assert info.value.reason == 'incomplete multibyte sequence'
 
 
-def test_query_coord():
+def test_query_coord() -> None:
     assert gb2312.query_coord('＄') == (1, 71)
     assert gb2312.query_coord('拿') == (36, 35)
     assert gb2312.query_coord('贽') == (74, 62)
@@ -37,7 +37,7 @@ def test_query_coord():
     assert isinstance(info.value.__cause__, GB2312EncodeError)
 
 
-def test_query_chr():
+def test_query_chr() -> None:
     assert gb2312.query_chr(1, 79) == '★'
     assert gb2312.query_chr(16, 1) == '啊'
     assert gb2312.query_chr(26, 26) == '汉'
@@ -54,7 +54,7 @@ def test_query_chr():
     assert isinstance(info.value.__cause__, GB2312DecodeError)
 
 
-def test_query_category():
+def test_query_category() -> None:
     categories = gb2312.get_categories()
     assert len(categories) == 3
     assert 'other' in categories
@@ -68,7 +68,7 @@ def test_query_category():
     assert gb2312.query_category('가') is None
 
 
-def test_alphabet():
+def test_alphabet() -> None:
     alphabet = gb2312.get_alphabet_other()
     assert len(alphabet) == 682
     for c in alphabet:
@@ -98,14 +98,14 @@ def test_alphabet():
         assert gb2312.query_category(c) is not None
 
 
-def test_count():
+def test_count() -> None:
     assert gb2312.get_other_count() == 682
     assert gb2312.get_level_1_count() == 3755
     assert gb2312.get_level_2_count() == 3008
     assert gb2312.get_count() == 7445
 
 
-def test_unicode():
+def test_unicode() -> None:
     alphabet_other = []
     alphabet_level_1 = []
     alphabet_level_2 = []

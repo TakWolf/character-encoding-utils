@@ -10,7 +10,7 @@ class ShiftJISEncodeError(ShiftJISException):
     position: int
     reason: str
 
-    def __init__(self, obj: str, position: int, reason: str):
+    def __init__(self, obj: str, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason
@@ -24,7 +24,7 @@ class ShiftJISDecodeError(ShiftJISException):
     position: int
     reason: str
 
-    def __init__(self, obj: bytes, position: int, reason: str):
+    def __init__(self, obj: bytes, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason

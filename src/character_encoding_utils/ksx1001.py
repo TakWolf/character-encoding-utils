@@ -11,7 +11,7 @@ class KSX1001EncodeError(KSX1001Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: str, position: int, reason: str):
+    def __init__(self, obj: str, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason
@@ -25,7 +25,7 @@ class KSX1001DecodeError(KSX1001Exception):
     position: int
     reason: str
 
-    def __init__(self, obj: bytes, position: int, reason: str):
+    def __init__(self, obj: bytes, position: int, reason: str) -> None:
         self.obj = obj
         self.position = position
         self.reason = reason
@@ -100,7 +100,7 @@ def query_coord(c: str) -> tuple[int, int]:
     return row, col
 
 
-def query_chr(row: int, col: int):
+def query_chr(row: int, col: int) -> str:
     if row < 1 or row > 94 or col < 1 or col > 94:
         raise KSX1001Exception(f"'row' and 'col' must between 1 and 94")
     try:

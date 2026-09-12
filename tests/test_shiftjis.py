@@ -4,7 +4,7 @@ from character_encoding_utils import shiftjis
 from character_encoding_utils.shiftjis import ShiftJISEncodeError, ShiftJISDecodeError
 
 
-def test_codec():
+def test_codec() -> None:
     assert shiftjis.encode('abc日本') == 'abc日本'.encode('shift-jis')
     assert shiftjis.decode(b'abc\x93\xfa\x96\x7b') == b'abc\x93\xfa\x96\x7b'.decode('shift-jis')
 
@@ -38,7 +38,7 @@ def test_codec():
     assert shiftjis.decode(shiftjis.encode('‾')) == '‾'
 
 
-def test_query_category():
+def test_query_category() -> None:
     categories = shiftjis.get_categories()
     assert len(categories) == 5
     assert 'single-byte-ascii-control' in categories
@@ -55,7 +55,7 @@ def test_query_category():
     assert shiftjis.query_category('가') is None
 
 
-def test_alphabet():
+def test_alphabet() -> None:
     alphabet = shiftjis.get_alphabet_single_byte_ascii_control()
     assert len(alphabet) == 33
     for c in alphabet:
@@ -87,7 +87,7 @@ def test_alphabet():
         assert shiftjis.query_category(c) is not None
 
 
-def test_count():
+def test_count() -> None:
     assert shiftjis.get_single_byte_ascii_control_count() == 33
     assert shiftjis.get_single_byte_ascii_printable_count() == 95
     assert shiftjis.get_single_byte_half_width_katakana_count() == 63
@@ -96,7 +96,7 @@ def test_count():
     assert shiftjis.get_count() == 7070
 
 
-def test_unicode():
+def test_unicode() -> None:
     alphabet_single_byte_ascii_control = []
     alphabet_single_byte_ascii_printable = []
     alphabet_single_byte_half_width_katakana = []
