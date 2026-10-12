@@ -41,7 +41,7 @@ def encode(cs: str) -> bytes:
     bs = bytearray()
     for position, c in enumerate(cs):
         try:
-            bs.extend(c.encode('ksx1001'))
+            bs.extend(c.encode('euc_kr'))
         except UnicodeEncodeError as e:
             raise KSX1001EncodeError(c, position, e.reason) from e
     return bytes(bs)
@@ -77,7 +77,7 @@ def decode(bs: bytes | bytearray) -> str:
             cs.append(chr(0x3164))  # Hangul Filler
         else:
             try:
-                cs.append(bc.decode('ksx1001'))
+                cs.append(bc.decode('euc_kr'))
             except UnicodeDecodeError as e:
                 raise KSX1001DecodeError(bc, passed, e.reason) from e
         passed += len(bc)
